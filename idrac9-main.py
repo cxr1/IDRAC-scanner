@@ -7,6 +7,7 @@ import sys
 import zipfile
 import winreg
 import requests
+from tqdm import tqdm
 import tkinter.messagebox #弹窗库
 # from selenium import webdriver
 # from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -56,7 +57,7 @@ def download_driver(download_url):
     file = requests.get(download_url)
     with open("chromedriver.zip", 'wb') as zip_file:  # 保存文件到脚本所在目录
         zip_file.write(file.content)
-        print('下载成功')
+        #print('下载成功')
 
 
 def download_lase_driver(download_url, chromeVersion, chrome_main_version):
@@ -71,8 +72,10 @@ def download_lase_driver(download_url, chromeVersion, chrome_main_version):
                 break
         if download_url == "":
             print("暂无法找到与chrome兼容的chromedriver版本，请在http://npm.taobao.org/mirrors/chromedriver/ 核实。")
-
-    download_driver(download_url=download_url)
+    with tqdm(total=100000, desc='Example', leave=True, ncols=100, unit='B', unit_scale=True) as pbar:
+        for i in range(10):
+            download_driver(download_url=download_url)
+            pbar.update(10000)
     path = get_path()
     print('当前路径为：', path)
     unzip_driver(path)
